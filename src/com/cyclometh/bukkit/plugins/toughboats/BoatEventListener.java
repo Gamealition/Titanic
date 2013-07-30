@@ -9,6 +9,7 @@ package com.cyclometh.bukkit.plugins.toughboats;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 /*
@@ -44,8 +45,14 @@ public class BoatEventListener implements Listener {
 		if (event.getAttacker() == null && !event.isCancelled())
 		{
 			event.setCancelled(true);
-			if(plugin.getConfig().getBoolean("debug"))
-				plugin.getLogger().info("Boat destruction prevented.");
+			if(plugin.getConfig().getBoolean("debug", false))
+				plugin.getLogger().info(String.format("Boat destruction prevented. Player: %s. Location: X%d Y%d Z%d.",
+						((Player) event.getVehicle().getPassenger()).getName(),
+						(int)event.getVehicle().getLocation().getX(),
+						(int)event.getVehicle().getLocation().getY(),
+						(int)event.getVehicle().getLocation().getZ()
+						));
+						
 		}
 		
 		

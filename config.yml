@@ -1,2 +1,29 @@
 #ToughBoats configuration file.
-debug: true
+
+#Output debug messages.
+debug: false
+
+#Synchronize players in boats.
+resync: false
+
+#Sync interval. Only has an effect if "resync" is true. Value is in seconds.
+#Players in boats will be resynchronized to their server location on this interval.
+#Recommended this not be less than 60 seconds.
+sync-interval: 60
+
+#Sync delay. Only has an effect if "resync" is true. Value is in ticks (NOT seconds). 1 second=20 ticks.
+#This is the length of time after a task is queued to synchronize a user that the teleport action will occur.
+#LEAVE THIS AT THE DEFAULT UNLESS YOU KNOW WHAT YOU'RE DOING.
+sync-delay: 2
+
+#Entity list purge interval. Only as an effect if "resync" is true. Value is in seconds.
+#This is how frequently the internal list of entities being tracked is purged.
+#LEAVE THIS AT THE DEFAULT UNLESS YOU KNOW WHAT YOU'RE DOING.
+purge-interval: 10
+
+#Entity list time to live. Only has an effect if "resync" is true. Value is in seconds.
+#This is how long an entity is allowed to stay in the list of tracked objects.
+#LEAVE THIS AT THE DEFAULT UNLESS YOU KNOW WHAT YOU'RE DOING.
+entity-ttl: 120
+
+ 

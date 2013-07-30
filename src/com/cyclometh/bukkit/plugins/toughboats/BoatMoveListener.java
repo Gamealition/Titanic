@@ -19,10 +19,16 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 	//We hold a reference to the plugin so we can
 	//access the logger.
 	ToughBoats plugin;
+	int syncInterval;
+	int entityTTL;
+	int syncDelay;
 	public BoatMoveListener(ToughBoats plugin)
 	{
 		this.plugin=plugin;
 		this.entityList=new HashMap<Integer, Calendar>();
+		this.syncInterval=plugin.getConfig().getInt("sync-interval", 60) * 1000;
+		this.entityTTL=plugin.getConfig().getInt("entity-ttl", 120) * 1000;
+		this.syncDelay=plugin.getConfig().getInt("sync-delay", 2);
 	}
 	
 	@EventHandler
@@ -45,7 +51,6 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 		
 		//get the entity ID to track it.
 		entityId=event.getVehicle().getEntityId();
-		
 		//track the entity. If we don't track it right now, we'll log it
 		//and move on.
 		if(!this.entityList.containsKey(entityId))
@@ -61,13 +66,20 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 		long diff=now.getTimeInMillis()-then.getTimeInMillis();
 		
 		//if it's been more than a minute...
-		if(diff > 60000)
+		if(diff > this.syncInterval)
 			{
 				boat=event.getVehicle();
 				rider=(Player) boat.getPassenger();
-				
+				if(plugin.getConfig().getBoolean("debug", false))
+				{
+					plugin.getLogger().info(String.format("Creating teleport task for entity ID %d. Location: X%d Y%d Z%d.", 
+							entityId, 
+							(int)rider.getLocation().getX(), 
+							(int)rider.getLocation().getY(), 
+							(int)rider.getLocation().getZ()));
+				}
 				//schedule the task to run.
-				Bukkit.getScheduler().runTaskLater(this.plugin, new TeleportTask(rider.getLocation(), boat), 2);
+				Bukkit.getScheduler().runTaskLater(this.plugin, new TeleportTask(rider.getLocation(), boat, this.plugin), this.syncDelay);
 				//stop tracking it. Next time a move event is registered it'll be retracked.
 				entityList.remove(entityId);
 			}
@@ -82,7 +94,7 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 		Iterator<Map.Entry<Integer, Calendar>> entries = entityList.entrySet().iterator();
 		while (entries.hasNext()) {
 		    Map.Entry<Integer, Calendar> entry = entries.next();
-		    if(now.getTimeInMillis()-entry.getValue().getTimeInMillis() > 120000)
+		    if(now.getTimeInMillis()-entry.getValue().getTimeInMillis() > this.entityTTL)
 		    {
 		    	entries.remove();
 		    }
