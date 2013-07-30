@@ -55,7 +55,10 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 		//and move on.
 		if(!this.entityList.containsKey(entityId))
 		{
-			plugin.getLogger().info(String.format("Adding entity ID %d to list.", entityId));
+			if(plugin.getConfig().getBoolean("debug", false))
+			{
+				plugin.getLogger().info(String.format("Adding entity ID %d to list.", entityId));
+			}
 			entityList.put(entityId, Calendar.getInstance()); //store the time we saw it last.
 			return;
 		}
