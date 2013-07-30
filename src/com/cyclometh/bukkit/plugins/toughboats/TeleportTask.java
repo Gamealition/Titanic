@@ -1,0 +1,53 @@
+package com.cyclometh.bukkit.plugins.toughboats;
+
+
+import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+public class TeleportTask extends BukkitRunnable {
+
+	private Location loc;
+	private Vehicle boat;
+	
+	public TeleportTask(Location teleportTo, Vehicle boat){
+		if(boat.getType() != EntityType.BOAT)
+		{
+			throw new IllegalStateException("Cannot create an instance of TeleportTask with a non-boat vehicle.");
+		}
+		if(boat.getPassenger() == null)
+		{
+			throw new IllegalStateException("Cannot create an instance of TeleportTask with an empty boat.");
+		}
+		if(boat.getPassenger().getType() != EntityType.PLAYER)
+		{
+			throw new IllegalStateException("Cannot create an instance of TeleportTask with a non-player entity.");
+		}
+		this.loc=teleportTo;
+		this.boat=boat;
+	}
+	
+	@Override
+	public void run() {
+		Player passenger;
+		if((passenger=(Player)boat.getPassenger()) == null)	//player got out?
+			return;
+		Vector vel = boat.getVelocity();
+		//eject the passenger, destroy the boat, add a new one,
+		//then put the passenger in the new one.
+		passenger.leaveVehicle();
+		boat.remove();
+		//set the yaw to the current facing.
+		this.loc.setYaw(passenger.getLocation().getYaw());
+		boat=(Boat)passenger.getWorld().spawn(this.loc, Boat.class);
+		passenger.teleport(this.loc, TeleportCause.PLUGIN);
+		boat.setPassenger(passenger);
+		boat.setVelocity(vel);
+		
+	}
+
+}

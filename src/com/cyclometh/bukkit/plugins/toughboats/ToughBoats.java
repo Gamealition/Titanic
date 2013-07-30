@@ -11,20 +11,33 @@
  */
 package com.cyclometh.bukkit.plugins.toughboats;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public class ToughBoats extends JavaPlugin {
 
+	private BukkitTask task;
+	private BoatEventListener eventListener;
+	private BoatMoveListener moveListener;
 	@Override
 	public void onEnable(){
 		getLogger().info("ToughBoats started! Now protecting any boats.");
 		this.saveDefaultConfig();
-		getServer().getPluginManager().registerEvents(new BoatEventListener(this), this);
+		this.eventListener=new BoatEventListener(this);
+		this.moveListener=new BoatMoveListener(this);
+		getServer().getPluginManager().registerEvents(this.eventListener, this);
+		getServer().getPluginManager().registerEvents(this.moveListener, this);
+		
+		//schedule the cleanup task. Run it every 10 seconds.
+		task=Bukkit.getScheduler().runTaskTimer(this, moveListener, 200, 200);
 	}
 	
 	@Override
 	public void onDisable(){
+		Bukkit.getScheduler().cancelTask(task.getTaskId());
 		getLogger().info("ToughBoats shut down. No longer protecting boats.");
+		
 	}
 	
 	
