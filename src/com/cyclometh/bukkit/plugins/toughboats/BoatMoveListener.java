@@ -92,6 +92,10 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 	@Override
 	public void run() {
 		//purge entities that were tracked but stoppped moving before being resynchronized.
+		if(plugin.getConfig().getBoolean("debug", false))
+		{
+			plugin.getLogger().info(String.format("Purging entity list. %d items in list before purge.",  entityList.size()));
+		}
 		Calendar now;
 		now=Calendar.getInstance();
 		Iterator<Map.Entry<Integer, Calendar>> entries = entityList.entrySet().iterator();
@@ -102,6 +106,10 @@ public class BoatMoveListener extends BukkitRunnable implements Listener {
 		    	entries.remove();
 		    }
 		    
+		}
+		if(plugin.getConfig().getBoolean("debug", false))
+		{
+			plugin.getLogger().info(String.format("Entity list purge complete. %d items in list after purge.",  entityList.size()));
 		}
 	}
 }

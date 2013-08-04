@@ -3,6 +3,9 @@
 #Output debug messages.
 debug: false
 
+#Enable boat protection. Defaults to true.
+protectboats: true
+
 #Synchronize players in boats.
 resync: false
 
