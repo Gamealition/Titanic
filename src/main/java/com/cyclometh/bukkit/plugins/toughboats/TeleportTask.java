@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
  */
 public class TeleportTask implements Runnable
 {
-    ToughBoats plugin;
+    private ToughBoats plugin;
 
     private Location loc;
     private Boat     boat;

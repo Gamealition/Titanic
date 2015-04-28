@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 /**
  * Listens for events relating to the damage or destruction of boats, cancelling them if
@@ -15,11 +16,15 @@ import org.bukkit.metadata.FixedMetadataValue;
  */
 public class BoatEventListener implements Listener
 {
-    ToughBoats plugin;
+    private static final String hitCactusTag = "hitCactus";
+
+    private ToughBoats    plugin;
+    private MetadataValue hitCactus;
 
     public BoatEventListener(ToughBoats plugin)
     {
-        this.plugin = plugin;
+        this.plugin    = plugin;
+        this.hitCactus = new FixedMetadataValue(plugin, true);
     }
 
     /**
@@ -31,38 +36,33 @@ public class BoatEventListener implements Listener
     {
         if (event.getVehicle().getType() == EntityType.BOAT)
         if (event.getBlock().getType()   == Material.CACTUS)
-            event.getVehicle().setMetadata("hitCactus", new FixedMetadataValue(plugin, true));
+        {
+            event.getVehicle().setMetadata(hitCactusTag, hitCactus);
+
+            if (plugin.debugging)
+                plugin.getLogger().info("Tagged boat that collided with cactus");
+        }
     }
 
-    /*
-     * Listen for VehicleDestroyedEvent.
-     */
     @EventHandler
     public void onVehicleDestroyed(VehicleDestroyEvent event)
     {
-
-        //if it's not a boat, we're not interested.
-        if (event.getVehicle().getType() != EntityType.BOAT)
+        if ( event.getVehicle().getType() != EntityType.BOAT || event.isCancelled() )
             return;
 
-        //if it's already cancelled, we don't care.
-        if (event.isCancelled())
-            return;
-
-        //if damage is from fire or lava, we don't try to stop it.
-        //getFireTicks() will be -1 if the boat isn't on fire.
+        // Do not cancel fire damage
         if (event.getVehicle().getFireTicks() != -1)
             return;
 
         // If damage is from cactus, don't stop it. This allows boat collection systems
         // to work as intended. Relies on metadata set in onVehicleCollide
-        if (event.getVehicle().hasMetadata("hitCactus"))
+        if ( event.getVehicle().hasMetadata(hitCactusTag) )
             return;
 
         if (event.getAttacker() == null)
         {
             event.setCancelled(true);
-            if (plugin.getConfig().getBoolean("debug", false))
+            if (plugin.debugging)
                 plugin.getLogger().info(String.format("Boat destruction prevented. Player: %s. Location: X%d Y%d Z%d.",
                         ((Player) event.getVehicle().getPassenger()).getName(),
                         (int) event.getVehicle().getLocation().getX(),

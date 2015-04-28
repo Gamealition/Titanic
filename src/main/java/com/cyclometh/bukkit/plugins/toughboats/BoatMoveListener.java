@@ -7,6 +7,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,11 +20,12 @@ import java.util.Map;
  */
 public class BoatMoveListener implements Runnable, Listener
 {
-    ToughBoats plugin;
+    private ToughBoats plugin;
+    private BukkitTask teleportTask;
 
-    int syncInterval;
-    int entityTTL;
-    int syncDelay;
+    private int syncInterval;
+    private int entityTTL;
+    private int syncDelay;
 
     private Map<Integer, Calendar> entityList;
 
@@ -36,37 +38,39 @@ public class BoatMoveListener implements Runnable, Listener
         this.syncDelay    = plugin.getConfig().getInt("sync-delay", 2);
     }
 
+    public void cancelTask()
+    {
+        if (teleportTask != null)
+            Bukkit.getScheduler().cancelTask( teleportTask.getTaskId() );
+    }
+
     @EventHandler
     public void onVehicleMove(VehicleMoveEvent event)
     {
-        int entityId;
+        int     entityId;
         Vehicle boat;
-        Player rider;
+        Player  rider;
 
-        //if it's not a boat, we're not interested.
         if (event.getVehicle().getType() != EntityType.BOAT)
             return;
-        //if there's no passenger, we don't care.
+
         if (event.getVehicle().getPassenger() == null)
             return;
-        //if the boat doesn't have a player in it, we don't care either.
+
         if (event.getVehicle().getPassenger().getType() != EntityType.PLAYER)
             return;
 
-        //get the entity ID to track it.
         entityId = event.getVehicle().getEntityId();
-        //track the entity. If we don't track it right now, we'll log it
-        //and move on.
         if ( !this.entityList.containsKey(entityId) )
         {
-            if (plugin.getConfig().getBoolean("debug", false))
-                plugin.getLogger().info(String.format("Adding entity ID %d to list.", entityId));
+            if (plugin.debugging)
+                plugin.getLogger().info( String.format("Adding entity ID %d to list.", entityId) );
 
-            entityList.put(entityId, Calendar.getInstance()); //store the time we saw it last.
+            entityList.put(entityId, Calendar.getInstance());
             return;
         }
 
-        //if we get here, the entity was already tracked. So let's see how long it's been.
+        // If we get here, we were tracking the boat
         Calendar now  = Calendar.getInstance();
         Calendar then = this.entityList.get(entityId);
         long diff     = now.getTimeInMillis() - then.getTimeInMillis();
@@ -76,24 +80,25 @@ public class BoatMoveListener implements Runnable, Listener
 
         boat  = event.getVehicle();
         rider = (Player) boat.getPassenger();
-        if ( plugin.getConfig().getBoolean("debug", false) )
+        if (plugin.debugging)
             plugin.getLogger().info(String.format("Creating teleport task for entity ID %d. Location: X%d Y%d Z%d.",
                     entityId,
                     (int) rider.getLocation().getX(),
                     (int) rider.getLocation().getY(),
                     (int) rider.getLocation().getZ()));
 
-        //schedule the task to run.
-        Bukkit.getScheduler().runTaskLater(this.plugin, new TeleportTask(rider.getLocation(), boat, this.plugin), this.syncDelay);
-        //stop tracking it. Next time a move event is registered it'll be retracked.
+        teleportTask = Bukkit.getScheduler().runTaskLater(
+                plugin, new TeleportTask(rider.getLocation(), boat, plugin), syncDelay);
+
+        // Stop tracking. Next time a move event is registered it'll be retracked.
         entityList.remove(entityId);
     }
 
     @Override
     public void run()
     {
-        //purge entities that were tracked but stoppped moving before being resynchronized.
-        if (plugin.getConfig().getBoolean("debug", false))
+        // Purge entities that were tracked but stopped moving before being resynchronized.
+        if (plugin.debugging)
             plugin.getLogger().info(String.format("Purging entity list. %d items in list before purge.", entityList.size()));
 
         Calendar now = Calendar.getInstance();
@@ -108,7 +113,7 @@ public class BoatMoveListener implements Runnable, Listener
                 entries.remove();
         }
 
-        if (plugin.getConfig().getBoolean("debug", false))
+        if (plugin.debugging)
             plugin.getLogger().info(String.format("Entity list purge complete. %d items in list after purge.", entityList.size()));
     }
 }

@@ -28,5 +28,3 @@ purge-interval: 10
 # This is how long an entity is allowed to stay in the list of tracked objects.
 # LEAVE THIS AT THE DEFAULT UNLESS YOU KNOW WHAT YOU'RE DOING.
 entity-ttl: 120
-
- 

@@ -4,3 +4,9 @@ main: com.cyclometh.bukkit.plugins.toughboats.ToughBoats
 version: 1.4
 description: Makes it impossible to break a boat object in Minecraft unless broken by hand
   , collides with a cactus or is placed on lava/fire.
+
+commands:
+   toughboats:
+      description: Management commands for ToughBoats
+      usage: /<command> reload
+      permission: toughboats.reload
