@@ -4,6 +4,15 @@ well... a boat.
 Originally coded by [Cyclometh](https://github.com/Cyclometh/), updated to Spigot 1.8.3
 with changes by [Roy Curtis](https://github.com/RoyCurtis). Licensed under MIT.
 
+## Building
+
+1. Install Maven on your system
+    * Windows: https://maven.apache.org/download.cgi
+    * Linux: Install the `maven` package (e.g. `sudo apt-get install maven`)
+2. Clone this repository into a folder
+3. Inside the folder, execute `mvn clean package`
+4. Look in the new `target` folder for the built JAR file
+
 ## Features
 
 * Prevents boats from breaking unless they...
