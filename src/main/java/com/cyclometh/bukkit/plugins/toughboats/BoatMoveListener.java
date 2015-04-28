@@ -7,17 +7,18 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class BoatMoveListener extends BukkitRunnable implements Listener
+/**
+ * Monitors the movement of boats being driven by players, to schedule periodic resyncs
+ * of their positions
+ */
+public class BoatMoveListener implements Runnable, Listener
 {
-    //We hold a reference to the plugin so we can
-    //access the logger.
     ToughBoats plugin;
 
     int syncInterval;
@@ -29,7 +30,7 @@ public class BoatMoveListener extends BukkitRunnable implements Listener
     public BoatMoveListener(ToughBoats plugin)
     {
         this.plugin       = plugin;
-        this.entityList   = new HashMap<Integer, Calendar>();
+        this.entityList   = new HashMap<>();
         this.syncInterval = plugin.getConfig().getInt("sync-interval", 60) * 1000;
         this.entityTTL    = plugin.getConfig().getInt("entity-ttl", 120) * 1000;
         this.syncDelay    = plugin.getConfig().getInt("sync-delay", 2);

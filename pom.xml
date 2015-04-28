@@ -7,6 +7,29 @@
     <groupId>com.cyclometh.bukkit.plugins.toughboats</groupId>
     <artifactId>ToughBoats</artifactId>
     <version>1.4-SNAPSHOT</version>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Cyclometh</name>
+            <email>cyclometh@gmail.com</email>
+            <url>https://github.com/Cyclometh/</url>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Roy Curtis</name>
+            <email>roy.adrian.curtis+github@gmail.com</email>
+            <url>https://github.com/RoyCurtis/</url>
+        </contributor>
+    </contributors>
 
     <repositories>
         <!-- For spigot/bukkit/craftbukkit snapshots -->

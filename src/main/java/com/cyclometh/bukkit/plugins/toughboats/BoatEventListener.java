@@ -1,9 +1,3 @@
-/*
- * Class: BoatEventsListener
- * Listens for a VehicleDestroyedEvent, checks if the vehicle is a Boat entity, and
- * if necessary, will cancel the event.
- */
-
 package com.cyclometh.bukkit.plugins.toughboats;
 
 import org.bukkit.Material;
@@ -15,14 +9,12 @@ import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-/*
- * Listens for and cancels any boat destruction events.
+/**
+ * Listens for events relating to the damage or destruction of boats, cancelling them if
+ * they are triggered by frivolous means
  */
 public class BoatEventListener implements Listener
 {
-
-    //We hold a reference to the plugin so we can
-    //access the logger.
     ToughBoats plugin;
 
     public BoatEventListener(ToughBoats plugin)
