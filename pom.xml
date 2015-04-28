@@ -6,7 +6,7 @@
 
     <groupId>com.cyclometh.bukkit.plugins.toughboats</groupId>
     <artifactId>ToughBoats</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
 
     <repositories>
         <!-- For spigot/bukkit/craftbukkit snapshots -->
