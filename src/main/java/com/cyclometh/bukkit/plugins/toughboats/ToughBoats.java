@@ -7,39 +7,49 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.logging.Logger;
+
 /**
  * Core class of the ToughBoats plugin. Registers boat events and a scheduled task for
  * periodically synchronizing player boat positions.
  */
 public class ToughBoats extends JavaPlugin
 {
-    public boolean debugging;
+    static Logger LOGGER;
 
     private BukkitTask        moveTask;
-    private BoatEventListener eventListener;
+    private BoatEventListener boatListener;
     private BoatMoveListener  moveListener;
+
+    @Override
+    public void onLoad()
+    {
+        LOGGER = getLogger();
+    }
 
     @Override
     public void onEnable()
     {
-        this.saveDefaultConfig();
-        this.reloadConfig();
-        this.debugging = this.getConfig().getBoolean("debug", false);
+        Config.init(this);
 
-        if (debugging)
-            getLogger().info("Debugging is enabled in config.yml");
+        if ( Config.isNothingEnabled() )
+        {
+            LOGGER.warning("It appears no ToughBoats features are enabled.");
+            LOGGER.warning("Please check the config at `plugins/ToughBoats/config.yml`.");
+            return;
+        }
 
         // Boat damage protection feature
-        if ( this.getConfig().getBoolean("protectboats", true) )
+        if (Config.protectBoats)
         {
-            this.eventListener = new BoatEventListener(this);
-            getServer().getPluginManager().registerEvents(this.eventListener, this);
+            this.boatListener = new BoatEventListener(this);
+            getServer().getPluginManager().registerEvents(this.boatListener, this);
         }
-        else if (debugging)
-            getLogger().info("Boat protection disabled in config.yml");
+        else
+            LOGGER.fine("Boat protection disabled in config.yml");
 
         // Boat client-server resynchronization feature
-        if ( this.getConfig().getBoolean("resync", true) )
+        if (Config.resyncBoats)
         {
             this.moveListener = new BoatMoveListener(this);
             getServer().getPluginManager().registerEvents(this.moveListener, this);
@@ -48,13 +58,10 @@ public class ToughBoats extends JavaPlugin
             this.moveTask     = Bukkit.getScheduler().runTaskTimer(
                     this, moveListener, purgeInterval, purgeInterval);
         }
-        else if (debugging)
-            getLogger().info("Player location synchronization disabled in config.yml");
+        else
+            LOGGER.fine("Player location synchronization disabled in config.yml");
 
-        if (eventListener == null && moveListener == null)
-            getLogger().warning("No features are enabled; plugin is effectively useless");
-        else if (debugging)
-            getLogger().info("Enabled; listeners and tasks registered");
+        LOGGER.fine("Enabled; listeners and tasks registered");
     }
 
     @Override
@@ -63,14 +70,15 @@ public class ToughBoats extends JavaPlugin
         if (moveTask != null)
             Bukkit.getScheduler().cancelTask( moveTask.getTaskId() );
 
+        if (this.moveListener != null)
+            this.moveListener.cancelTask();
+
         HandlerList.unregisterAll(this);
-        this.moveListener.cancelTask();
         this.moveTask      = null;
-        this.eventListener = null;
+        this.boatListener  = null;
         this.moveListener  = null;
 
-        if (debugging)
-            getLogger().info("Disabled; all listeners unregistered");
+        LOGGER.fine("Disabled; all listeners unregistered");
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ToughBoats extends JavaPlugin
         this.onDisable();
         this.onEnable();
 
-        if (getServer().getConsoleSender() != sender)
+        if (sender != getServer().getConsoleSender())
             sender.sendMessage("[ToughBoats] Reloaded plugin and config.yml");
 
         getLogger().info("Reloaded plugin and config.yml");

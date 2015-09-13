@@ -26,3 +26,30 @@ with changes by [Roy Curtis](https://github.com/RoyCurtis). Licensed under MIT.
 
 * `/toughboats reload` - Reloads the plugin and config.yml. Requires the permission
 **toughboats.reload** or op.
+
+# Debugging
+
+ToughBoats makes use of `DEBUG` and `TRACE` logging levels for debugging. To enable these messages, append this line to the server's JVM arguments:
+
+> `-Dlog4j.configurationFile=log4j.xml`
+
+Then in the root directory of the server, create the file `log4j.xml` with these contents:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="5" packages="com.mojang.util">
+  <Appenders>
+    <Queue name="TerminalConsole">
+      <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n"/>
+    </Queue>
+  </Appenders>
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="TerminalConsole"/>
+    </Root>
+    <Logger additivity="false" level="ALL" name="com.cyclometh.bukkit.plugins.toughboats.ToughBoats">
+      <AppenderRef ref="TerminalConsole"/>
+    </Logger>
+  </Loggers>
+</Configuration>
+```

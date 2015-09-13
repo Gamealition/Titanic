@@ -6,9 +6,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.logging.Logger;
 
 /**
  * A task object to manage resynchronizing players with their actual position. It is
@@ -17,13 +17,17 @@ import org.bukkit.util.Vector;
  */
 public class TeleportTask implements Runnable
 {
-    private ToughBoats plugin;
+    private static ToughBoats PLUGIN;
+    private static Logger     LOGGER;
 
     private Location loc;
     private Boat     boat;
 
     public TeleportTask(Location teleportTo, Vehicle vehicle, ToughBoats plugin)
     {
+        PLUGIN = plugin;
+        LOGGER = ToughBoats.LOGGER;
+
         if (vehicle.getType() != EntityType.BOAT)
             throw new IllegalStateException("Cannot create an instance of TeleportTask with a non-boat vehicle.");
 
@@ -33,7 +37,6 @@ public class TeleportTask implements Runnable
         if (vehicle.getPassenger().getType() != EntityType.PLAYER)
             throw new IllegalStateException("Cannot create an instance of TeleportTask with a non-player entity.");
 
-        this.plugin = plugin;
         this.loc    = teleportTo;
         this.boat   = (Boat) vehicle;
     }
@@ -49,8 +52,7 @@ public class TeleportTask implements Runnable
         if (passenger == null) // player got out?
             return;
 
-        if (plugin.debugging)
-            plugin.getLogger().info( String.format("Resynchronizing player %s.", passenger.getName()) );
+        LOGGER.finer( String.format("Resynchronizing player %s.", passenger.getName()) );
 
         Vector vel = boat.getVelocity();
         float  yaw = passenger.getLocation().getYaw();
@@ -67,5 +69,4 @@ public class TeleportTask implements Runnable
         this.loc  = null;
         this.boat = null;
     }
-
 }
