@@ -4,7 +4,7 @@ well... a boat.
 Originally coded by [Cyclometh](https://github.com/Cyclometh/), updated to Spigot 1.8.3
 with changes by [Roy Curtis](https://github.com/RoyCurtis). Licensed under MIT.
 
-## Building
+# Building
 
 1. Install Maven on your system
     * Windows: https://maven.apache.org/download.cgi
@@ -13,7 +13,7 @@ with changes by [Roy Curtis](https://github.com/RoyCurtis). Licensed under MIT.
 3. Inside the folder, execute `mvn clean package`
 4. Look in the new `target` folder for the built JAR file
 
-## Features
+# Features
 
 * Prevents boats from breaking unless they...
     * ...are hit by player
@@ -21,11 +21,13 @@ with changes by [Roy Curtis](https://github.com/RoyCurtis). Licensed under MIT.
     * ...collide with a cactus
 * Keeps boat positions in sync between client and server (fixes [MC-2931]
 (https://bugs.mojang.com/browse/MC-2931))
+* Negates fall damage whilst on a boat (fixes [MC-881]
+(https://bugs.mojang.com/browse/MC-881))
 
-## Commands
+# Commands
 
 * `/toughboats reload` - Reloads the plugin and config.yml. Requires the permission
-**toughboats.reload** or op.
+**toughboats.reload** or OP.
 
 # Debugging
 

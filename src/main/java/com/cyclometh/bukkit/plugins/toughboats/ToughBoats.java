@@ -16,8 +16,9 @@ public class ToughBoats extends JavaPlugin
 {
     static Logger LOGGER;
 
-    private BoatEventListener boatListener;
-    private BoatMoveListener  moveListener;
+    private BoatEventListener  boatListener;
+    private PlayerHurtListener hurtListener;
+    private BoatMoveListener   moveListener;
 
     @Override
     public void onLoad()
@@ -40,6 +41,9 @@ public class ToughBoats extends JavaPlugin
         if (Config.protectBoats)
             boatListener = new BoatEventListener(this);
 
+        if (Config.protectPlayers)
+            hurtListener = new PlayerHurtListener(this);
+
         if (Config.resyncBoats)
             moveListener = new BoatMoveListener(this);
 
@@ -52,6 +56,7 @@ public class ToughBoats extends JavaPlugin
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
         boatListener = null;
+        hurtListener = null;
         moveListener = null;
 
         LOGGER.fine("Plugin fully disabled; all listeners and tasks unregistered");

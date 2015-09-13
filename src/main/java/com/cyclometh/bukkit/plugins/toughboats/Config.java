@@ -10,12 +10,12 @@ import java.util.logging.Logger;
  */
 class Config
 {
-    private static Logger LOGGER;
-
     static Configuration config;
 
     /** Whether boats are protected from damage or destruction */
     static boolean protectBoats   = true;
+    /** Whether players are protected from fall damage in boats (vanilla bug) */
+    static boolean protectPlayers = true;
     /** Whether boat positions are periodically resync'd */
     static boolean resyncBoats    = true;
     /** How often (in seconds) to perform resync */
@@ -23,7 +23,7 @@ class Config
 
     static void init(ToughBoats plugin)
     {
-        LOGGER = ToughBoats.LOGGER;
+        Logger LOGGER = ToughBoats.LOGGER;
 
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
@@ -31,6 +31,7 @@ class Config
         config = plugin.getConfig();
 
         protectBoats   = config.getBoolean("protectboats", protectBoats);
+        protectPlayers = config.getBoolean("protectplayers", protectPlayers);
         resyncBoats    = config.getBoolean("resync", resyncBoats);
         resyncInterval = config.getInt("sync-interval", resyncInterval);
 
@@ -44,7 +45,7 @@ class Config
 
     static boolean isNothingEnabled()
     {
-        return !protectBoats && !resyncBoats;
+        return !protectBoats && !protectPlayers && !resyncBoats;
     }
 
     private Config() { }

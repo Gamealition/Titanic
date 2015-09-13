@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * Monitors the movement of boats being driven by players, to schedule a periodic resync
- * of their positions
+ * of their positions. See https://bugs.mojang.com/browse/MC-2931
  */
 public class BoatMoveListener implements Runnable, Listener
 {

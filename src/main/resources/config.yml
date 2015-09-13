@@ -3,7 +3,12 @@
 # Protect boats from collision damage (default: true)
 protectboats: true
 
-# Synchronize players' client side boat positions with server (default: true)
+# Prevent players from getting fall damage whilst in boats
+# See https://bugs.mojang.com/browse/MC-881 (default: true)
+protectplayers: true
+
+# Synchronize players' client side boat positions with server
+# See https://bugs.mojang.com/browse/MC-2931 (default: true)
 resync: true
 
 # Sync interval. Only has an effect if "resync" is true. Value is in seconds.
