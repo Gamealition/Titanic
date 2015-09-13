@@ -1,13 +1,12 @@
 package com.cyclometh.bukkit.plugins.toughboats;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -21,34 +20,30 @@ import java.util.logging.Logger;
  */
 public class BoatMoveListener implements Runnable, Listener
 {
-    private final int ENTITY_TTL = 120 * 1000;
-    private final int SYNC_DELAY = 2;
+    private static final int ENTITY_TTL  = 120 * 1000;
+    private static final int PURGE_DELAY = 10 * 20;
 
     private static ToughBoats PLUGIN;
     private static Logger     LOGGER;
 
     private Map<Integer, Calendar> entityList = new HashMap<>();
 
-    private BukkitTask teleportTask;
-
     public BoatMoveListener(ToughBoats plugin)
     {
         PLUGIN = plugin;
         LOGGER = ToughBoats.LOGGER;
-    }
 
-    public void cancelTask()
-    {
-        if (teleportTask != null)
-            Bukkit.getScheduler().cancelTask(teleportTask.getTaskId());
+        Bukkit.getScheduler().runTaskTimer(plugin, this, PURGE_DELAY, PURGE_DELAY);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        LOGGER.fine("Boat resync enabled; listening for boat move events");
     }
 
     @EventHandler
     public void onVehicleMove(VehicleMoveEvent event)
     {
-        int     entityId;
-        Vehicle boat;
-        Player  rider;
+        int      entityId;
+        Vehicle  boat;
+        Location loc;
 
         if (event.getVehicle().getType() != EntityType.BOAT)
             return;
@@ -73,22 +68,20 @@ public class BoatMoveListener implements Runnable, Listener
         Calendar then = this.entityList.get(entityId);
         long diff     = now.getTimeInMillis() - then.getTimeInMillis();
 
-        if (diff < Config.resyncInterval)
+        if (diff < Config.resyncInterval * 1000)
             return;
 
-        boat  = event.getVehicle();
-        rider = (Player) boat.getPassenger();
+        boat = event.getVehicle();
+        loc  = boat.getLocation();
 
         LOGGER.finer(String.format("Creating teleport task for entity ID %d. Location: X%d Y%d Z%d.",
             entityId,
-            (int) rider.getLocation().getX(),
-            (int) rider.getLocation().getY(),
-            (int) rider.getLocation().getZ()
+            (int) loc.getX(),
+            (int) loc.getY(),
+            (int) loc.getZ()
         ));
 
-        teleportTask = Bukkit.getScheduler().runTaskLater(
-            PLUGIN, new TeleportTask(rider.getLocation(), boat, PLUGIN), SYNC_DELAY
-        );
+        Bukkit.getScheduler().runTaskLater(PLUGIN, new TeleportTask(loc, boat), 1);
 
         // Stop tracking. Next time a move event is registered it'll be retracked.
         entityList.remove(entityId);
@@ -111,11 +104,13 @@ public class BoatMoveListener implements Runnable, Listener
         {
             Map.Entry<Integer, Calendar> entry = entries.next();
 
-            if (now.getTimeInMillis() - entry.getValue().getTimeInMillis() > this.ENTITY_TTL)
+            if (now.getTimeInMillis() - entry.getValue().getTimeInMillis() > ENTITY_TTL)
                 entries.remove();
         }
 
-        LOGGER.info(String.format("Entity list purge complete. %d items in list after purge.", entityList.size()));
+        LOGGER.finer(String.format("Entity list purge complete. %d items in list after purge.",
+            entityList.size()
+        ));
     }
 }
 

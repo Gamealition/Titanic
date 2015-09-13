@@ -28,6 +28,9 @@ public class BoatEventListener implements Listener
 
         if (CACTUS_HIT == null)
             CACTUS_HIT = new FixedMetadataValue(plugin, true);
+
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        LOGGER.fine("Boat protection enabled; listening for boat damage events");
     }
 
     /**

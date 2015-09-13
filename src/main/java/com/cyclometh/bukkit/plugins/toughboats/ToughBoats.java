@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.logging.Logger;
 
@@ -17,7 +16,6 @@ public class ToughBoats extends JavaPlugin
 {
     static Logger LOGGER;
 
-    private BukkitTask        moveTask;
     private BoatEventListener boatListener;
     private BoatMoveListener  moveListener;
 
@@ -39,46 +37,24 @@ public class ToughBoats extends JavaPlugin
             return;
         }
 
-        // Boat damage protection feature
         if (Config.protectBoats)
-        {
-            this.boatListener = new BoatEventListener(this);
-            getServer().getPluginManager().registerEvents(this.boatListener, this);
-        }
-        else
-            LOGGER.fine("Boat protection disabled in config.yml");
+            boatListener = new BoatEventListener(this);
 
-        // Boat client-server resynchronization feature
         if (Config.resyncBoats)
-        {
-            this.moveListener = new BoatMoveListener(this);
-            getServer().getPluginManager().registerEvents(this.moveListener, this);
+            moveListener = new BoatMoveListener(this);
 
-            int purgeInterval = this.getConfig().getInt("purge-interval", 10) * 20;
-            this.moveTask     = Bukkit.getScheduler().runTaskTimer(
-                    this, moveListener, purgeInterval, purgeInterval);
-        }
-        else
-            LOGGER.fine("Player location synchronization disabled in config.yml");
-
-        LOGGER.fine("Enabled; listeners and tasks registered");
+        LOGGER.fine("Plugin fully enabled");
     }
 
     @Override
     public void onDisable()
     {
-        if (moveTask != null)
-            Bukkit.getScheduler().cancelTask( moveTask.getTaskId() );
-
-        if (this.moveListener != null)
-            this.moveListener.cancelTask();
-
         HandlerList.unregisterAll(this);
-        this.moveTask      = null;
-        this.boatListener  = null;
-        this.moveListener  = null;
+        Bukkit.getScheduler().cancelTasks(this);
+        boatListener = null;
+        moveListener = null;
 
-        LOGGER.fine("Disabled; all listeners unregistered");
+        LOGGER.fine("Plugin fully disabled; all listeners and tasks unregistered");
     }
 
     @Override
@@ -87,13 +63,10 @@ public class ToughBoats extends JavaPlugin
         if ( args.length < 1 || !args[0].equalsIgnoreCase("reload") )
             return false;
 
-        this.onDisable();
-        this.onEnable();
+        onDisable();
+        onEnable();
 
-        if (sender != getServer().getConsoleSender())
-            sender.sendMessage("[ToughBoats] Reloaded plugin and config.yml");
-
-        getLogger().info("Reloaded plugin and config.yml");
+        sender.sendMessage("[ToughBoats] Reloaded plugin and config.yml");
         return true;
     }
 }

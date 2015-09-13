@@ -17,15 +17,13 @@ import java.util.logging.Logger;
  */
 public class TeleportTask implements Runnable
 {
-    private static ToughBoats PLUGIN;
-    private static Logger     LOGGER;
+    private static Logger LOGGER;
 
     private Location loc;
     private Boat     boat;
 
-    public TeleportTask(Location teleportTo, Vehicle vehicle, ToughBoats plugin)
+    public TeleportTask(Location teleportTo, Vehicle vehicle)
     {
-        PLUGIN = plugin;
         LOGGER = ToughBoats.LOGGER;
 
         if (vehicle.getType() != EntityType.BOAT)
