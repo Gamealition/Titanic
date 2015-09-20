@@ -3,7 +3,7 @@ author: Cyclometh
 authors: [Cyclometh, RoyCurtis]
 website: https://github.com/Gamealition/ToughBoats
 main: com.cyclometh.bukkit.plugins.toughboats.ToughBoats
-version: 1.5
+version: 1.5.1
 description: Fixes boats in various ways; prevents their breaking, resyncs client-server
   positions regularly and negates fall damage whilst sailing
 

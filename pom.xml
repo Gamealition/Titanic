@@ -6,7 +6,7 @@
 
     <groupId>com.cyclometh.bukkit.plugins.toughboats</groupId>
     <artifactId>ToughBoats</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5.1-SNAPSHOT</version>
     <licenses>
         <license>
             <name>MIT</name>

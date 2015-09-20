@@ -69,8 +69,7 @@ public class BoatEventListener implements Listener
             return;
 
         event.setCancelled(true);
-        LOGGER.finer(String.format("Boat destruction prevented. Player: %s. Location: X%d Y%d Z%d.",
-            event.getVehicle().getPassenger().getName(),
+        LOGGER.finer(String.format("Boat destruction prevented. Location: X%d Y%d Z%d.",
             (int) event.getVehicle().getLocation().getX(),
             (int) event.getVehicle().getLocation().getY(),
             (int) event.getVehicle().getLocation().getZ()
