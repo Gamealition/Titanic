@@ -7,6 +7,7 @@
     <groupId>com.cyclometh.bukkit.plugins.toughboats</groupId>
     <artifactId>ToughBoats</artifactId>
     <version>1.5.1-SNAPSHOT</version>
+
     <licenses>
         <license>
             <name>MIT</name>
@@ -37,14 +38,26 @@
             <id>spigot-snapshots</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <!-- For ProtocolLib -->
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <!-- Spigot + Bukkit API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.9.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- ProtocolLib; required library + plugin -->
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -55,8 +68,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>

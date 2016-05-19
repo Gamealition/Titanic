@@ -1,17 +1,11 @@
 # ToughBoats configuration file
 
-# Protect boats from collision damage (default: true)
-protectboats: true
-
-# Prevent players from getting fall damage whilst in boats
-# See https://bugs.mojang.com/browse/MC-881 (default: true)
-protectplayers: true
-
-# Synchronize players' client side boat positions with server
-# See https://bugs.mojang.com/browse/MC-2931 (default: true)
-resync: true
-
-# Sync interval. Only has an effect if "resync" is true. Value is in seconds.
-# Players in boats will be resynchronized to their server location on this interval.
-# Recommended this not be less than 60 seconds (default: 60)
-sync-interval: 60
+# Prevent boats from sinking into the water
+# See https://bugs.mojang.com/browse/MC-91206
+unsinkableboats:
+  # Prevents unoccupied boats from sinking when drifting into higher water.
+  # This is a simpler check (default: true)
+  unoccupied: true
+  # Prevents occupied (driven) boats from sinking when drifting into higher water.
+  # This is a more complicated check that uses ProtocolLib (default: true)
+  occupied: true

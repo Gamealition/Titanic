@@ -8,17 +8,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-/**
- * Core class of the ToughBoats plugin. Registers boat events and a scheduled task for
- * periodically synchronizing player boat positions.
- */
+/** Core class of the ToughBoats plugin. Registers handlers according to config. */
 public class ToughBoats extends JavaPlugin
 {
     static Logger LOGGER;
 
-    private BoatEventListener  boatListener;
-    private PlayerHurtListener hurtListener;
     private BoatMoveListener   moveListener;
+    private BoatPacketListener packetListener;
 
     @Override
     public void onLoad()
@@ -38,14 +34,11 @@ public class ToughBoats extends JavaPlugin
             return;
         }
 
-        if (Config.protectBoats)
-            boatListener = new BoatEventListener(this);
-
-        if (Config.protectPlayers)
-            hurtListener = new PlayerHurtListener(this);
-
-        if (Config.resyncBoats)
+        if (Config.unsinkableUnoccupiedBoats)
             moveListener = new BoatMoveListener(this);
+
+        if (Config.unsinkableOccupiedBoats)
+            packetListener = new BoatPacketListener(this);
 
         LOGGER.fine("Plugin fully enabled");
     }
@@ -55,9 +48,8 @@ public class ToughBoats extends JavaPlugin
     {
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
-        boatListener = null;
-        hurtListener = null;
-        moveListener = null;
+        moveListener   = null;
+        packetListener = null;
 
         LOGGER.fine("Plugin fully disabled; all listeners and tasks unregistered");
     }

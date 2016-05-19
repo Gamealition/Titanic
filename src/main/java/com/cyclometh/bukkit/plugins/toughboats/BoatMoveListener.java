@@ -1,116 +1,65 @@
 package com.cyclometh.bukkit.plugins.toughboats;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.entity.Boat;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.util.Vector;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Monitors the movement of boats being driven by players, to schedule a periodic resync
- * of their positions. See https://bugs.mojang.com/browse/MC-2931
+ * Monitors the movement of unoccupied boats being pushed and attempts to prevent their sinking by
+ * higher currents. See https://bugs.mojang.com/browse/MC-91206
  */
-public class BoatMoveListener implements Runnable, Listener
+public class BoatMoveListener implements Listener
 {
-    private static final int ENTITY_TTL  = 120 * 1000;
-    private static final int PURGE_DELAY = 10 * 20;
-
-    private static ToughBoats PLUGIN;
-    private static Logger     LOGGER;
-
-    private Map<Integer, Calendar> entityList = new HashMap<>();
+    private static ToughBoats      PLUGIN;
+    private static Logger          LOGGER;
 
     public BoatMoveListener(ToughBoats plugin)
     {
         PLUGIN = plugin;
         LOGGER = ToughBoats.LOGGER;
 
-        Bukkit.getScheduler().runTaskTimer(plugin, this, PURGE_DELAY, PURGE_DELAY);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        LOGGER.fine("Boat resync enabled; listening for boat move events");
+        LOGGER.fine("Unsinkable unoccupied boats enabled; listening for boat move events");
     }
 
     @EventHandler
+    /** Fires when boat moves whilst empty (drifting boats) */
     public void onVehicleMove(VehicleMoveEvent event)
     {
-        int      entityId;
-        Vehicle  boat;
-        Location loc;
+        Boat    boat;
+        Vector  vel;
+        double  velX, velY, velZ;
 
         if (event.getVehicle().getType() != EntityType.BOAT)
             return;
 
-        if (event.getVehicle().getPassenger() == null)
-            return;
+        boat = (Boat) event.getVehicle();
+        vel  = boat.getVelocity();
+        velX = vel.getX();
+        velY = vel.getY();
+        velZ = vel.getZ();
 
-        if (event.getVehicle().getPassenger().getType() != EntityType.PLAYER)
-            return;
-
-        entityId = event.getVehicle().getEntityId();
-        if ( !this.entityList.containsKey(entityId) )
+        // Compensate for when boat runs aground and sinks into block
+        if ( velY < -0.01 && boat.getLocation().getBlock().getType().isOccluding() )
         {
-            LOGGER.finer(String.format("Adding entity ID %d to list.", entityId));
-
-            entityList.put( entityId, Calendar.getInstance() );
+            boat.teleport( boat.getLocation().add(0, 0.5, 0) );
             return;
         }
 
-        // If we get here, we were tracking the boat
-        Calendar now  = Calendar.getInstance();
-        Calendar then = this.entityList.get(entityId);
-        long diff     = now.getTimeInMillis() - then.getTimeInMillis();
-
-        if (diff < Config.resyncInterval * 1000)
+        // Proceed only if movement is large enough
+        if (velX <  0.01 && velZ <  0.01)
+        if (velX > -0.01 && velZ > -0.01)
             return;
 
-        boat = event.getVehicle();
-        loc  = boat.getLocation();
-
-        LOGGER.finer(String.format("Creating teleport task for entity ID %d. Location: X%d Y%d Z%d.",
-            entityId,
-            (int) loc.getX(),
-            (int) loc.getY(),
-            (int) loc.getZ()
-        ));
-
-        Bukkit.getScheduler().runTaskLater(PLUGIN, new TeleportTask(loc, boat), 1);
-
-        // Stop tracking. Next time a move event is registered it'll be retracked.
-        entityList.remove(entityId);
+        // Compensate for when boat is "underwater"
+        if ( boat.getLocation().add(0,  0.5, 0).getBlock().isLiquid() )
+            boat.setVelocity( vel.setY(0.06) );
     }
 
-    @Override
-    public void run()
-    {
-        // TODO: Is all of the tracking code necessary nowadays?
-        // Purge entities that were tracked but stopped moving before being resynchronized.
-        LOGGER.finer(String.format("Purging entity list. %d items in list before purge.",
-            entityList.size()
-        ));
-
-        Calendar now = Calendar.getInstance();
-
-        Iterator<Map.Entry<Integer, Calendar>> entries = entityList.entrySet().iterator();
-
-        while ( entries.hasNext() )
-        {
-            Map.Entry<Integer, Calendar> entry = entries.next();
-
-            if (now.getTimeInMillis() - entry.getValue().getTimeInMillis() > ENTITY_TTL)
-                entries.remove();
-        }
-
-        LOGGER.finer(String.format("Entity list purge complete. %d items in list after purge.",
-            entityList.size()
-        ));
-    }
 }
 
