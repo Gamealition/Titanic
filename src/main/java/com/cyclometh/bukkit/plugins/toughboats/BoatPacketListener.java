@@ -1,8 +1,5 @@
 package com.cyclometh.bukkit.plugins.toughboats;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,17 +17,15 @@ import java.util.logging.Logger;
  * Monitors the movement of boats being driven by players and attempts to prevent their
  * sinking by higher currents. See https://bugs.mojang.com/browse/MC-91206
  */
-public class BoatPacketListener extends PacketAdapter implements Listener
+public class BoatPacketListener implements Listener
 {
-    private static ToughBoats PLUGIN;
+    private static Titanic PLUGIN;
     private static Logger     LOGGER;
 
-    public BoatPacketListener(ToughBoats plugin)
+    public BoatPacketListener(Titanic plugin)
     {
-        super(plugin, ListenerPriority.NORMAL, PacketType.Play.Client.VEHICLE_MOVE);
-
         PLUGIN = plugin;
-        LOGGER = ToughBoats.LOGGER;
+        LOGGER = Titanic.LOGGER;
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         LOGGER.fine("Unsinkable occupied boats enabled; listening for boat move events");

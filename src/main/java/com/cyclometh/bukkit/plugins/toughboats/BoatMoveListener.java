@@ -17,13 +17,13 @@ import java.util.logging.Logger;
  */
 public class BoatMoveListener implements Listener
 {
-    private static ToughBoats PLUGIN;
+    private static Titanic PLUGIN;
     private static Logger     LOGGER;
 
-    public BoatMoveListener(ToughBoats plugin)
+    public BoatMoveListener(Titanic plugin)
     {
         PLUGIN = plugin;
-        LOGGER = ToughBoats.LOGGER;
+        LOGGER = Titanic.LOGGER;
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         LOGGER.fine("Unsinkable unoccupied boats enabled; listening for boat move events");

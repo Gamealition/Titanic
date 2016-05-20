@@ -1,15 +1,12 @@
-name: ToughBoats
-author: Cyclometh
-authors: [Cyclometh, RoyCurtis]
-website: https://github.com/Gamealition/ToughBoats
-main: com.cyclometh.bukkit.plugins.toughboats.ToughBoats
-version: 1.5.1
-depend: [ProtocolLib]
-description: Fixes boats in various ways; prevents their breaking, resyncs client-server
-  positions regularly and negates fall damage whilst sailing
+name:        ${project.artifactId}
+version:     ${project.version}
+description: ${project.description}
+authors:     [Cyclometh, RoyCurtis]
+website:     https://github.com/Gamealition/Titanic
+main:        com.cyclometh.bukkit.plugins.toughboats.Titanic
 
 commands:
-   toughboats:
-      description: Management commands for ToughBoats
-      usage: /<command> reload
-      permission: toughboats.reload
+   titanic:
+      description: Reloads Titanic config from disk
+      permission:  titanic.reload
+      usage:       /<command>

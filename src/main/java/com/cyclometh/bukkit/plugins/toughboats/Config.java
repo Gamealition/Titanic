@@ -15,7 +15,7 @@ class Config
     /** Whether occupied boat positions are periodically resync'd */
     static boolean unsinkableOccupiedBoats   = true;
 
-    static void init(ToughBoats plugin)
+    static void init(Titanic plugin)
     {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();

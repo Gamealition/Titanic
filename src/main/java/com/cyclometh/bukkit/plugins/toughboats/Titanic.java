@@ -8,8 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-/** Core class of the ToughBoats plugin. Registers handlers according to config. */
-public class ToughBoats extends JavaPlugin
+/** Core class of the Titanic plugin. Handles config, registration and reload command */
+public class Titanic extends JavaPlugin
 {
     static Logger LOGGER;
 
@@ -29,8 +29,8 @@ public class ToughBoats extends JavaPlugin
 
         if ( Config.isNothingEnabled() )
         {
-            LOGGER.warning("It appears no ToughBoats features are enabled.");
-            LOGGER.warning("Please check the config at `plugins/ToughBoats/config.yml`.");
+            LOGGER.warning("It appears no Titanic features are enabled.");
+            LOGGER.warning("Please check the config at `plugins/Titanic/config.yml`.");
             return;
         }
 
@@ -58,13 +58,10 @@ public class ToughBoats extends JavaPlugin
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
-        if ( args.length < 1 || !args[0].equalsIgnoreCase("reload") )
-            return false;
-
         onDisable();
         onEnable();
 
-        sender.sendMessage("[ToughBoats] Reloaded plugin and config.yml");
+        sender.sendMessage("[Titanic] Reloaded plugin and config.yml");
         return true;
     }
 }

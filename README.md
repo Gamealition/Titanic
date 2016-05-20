@@ -49,7 +49,7 @@ Then in the root directory of the server, create the file `log4j.xml` with these
     <Root level="INFO">
       <AppenderRef ref="TerminalConsole"/>
     </Root>
-    <Logger additivity="false" level="ALL" name="com.cyclometh.bukkit.plugins.toughboats.ToughBoats">
+    <Logger additivity="false" level="ALL" name="com.cyclometh.bukkit.plugins.toughboats.Titanic">
       <AppenderRef ref="TerminalConsole"/>
     </Logger>
   </Loggers>
