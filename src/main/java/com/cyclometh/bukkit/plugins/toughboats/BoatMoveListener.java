@@ -1,5 +1,7 @@
 package com.cyclometh.bukkit.plugins.toughboats;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -28,29 +30,29 @@ public class BoatMoveListener implements Listener
     }
 
     @EventHandler
-    public void onVehicleMove(VehicleMoveEvent event)
+    public void onBoatMove(VehicleMoveEvent event)
     {
-        Boat   boat;
-        Vector vel;
-
-        // Only track boats
+        // Only handle boats
         if (event.getVehicle().getType() != EntityType.BOAT)
             return;
 
-        // Only track boats that are unoccupied or have non-player riders
+        // Only handle boats that are unoccupied or have non-player riders
         if (event.getVehicle().getPassenger() != null)
         if (event.getVehicle().getPassenger().getType() == EntityType.PLAYER)
             return;
 
-        boat = (Boat) event.getVehicle();
-        vel  = boat.getVelocity();
+        Boat     boat  = (Boat) event.getVehicle();
+        Location locTo = event.getTo();
+        Vector   vel   = boat.getVelocity();
+        Block    block = locTo.getBlock();
+        Block    above = locTo.add(0, 0.6, 0).getBlock();
 
-        // Compensate for when boat runs aground and sinks into block
-        if ( boat.getLocation().getBlock().getType().isOccluding() )
-            boat.teleport( boat.getLocation().add(0, 0.5, 0) );
-        // Compensate for when boat is underwater
-        else if ( boat.getLocation().add(0, 0.5, 0).getBlock().isLiquid() )
-            boat.setVelocity( vel.setY(0.06) );
+        // Deal with boats that sink into blocks after running aground
+        if ( block.getType().isSolid() )
+            boat.teleport(locTo);
+        // Deal with boats that are inside water
+        else if ( above.isLiquid() )
+            boat.setVelocity( vel.setY(0.1) );
     }
 }
 
