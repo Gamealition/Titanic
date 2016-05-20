@@ -28,15 +28,13 @@
             <email>cyclometh@gmail.com</email>
             <url>https://github.com/Cyclometh/</url>
         </developer>
-    </developers>
 
-    <contributors>
-        <contributor>
+        <developer>
             <name>Roy Curtis</name>
             <email>roy.adrian.curtis+github@gmail.com</email>
             <url>https://github.com/RoyCurtis/</url>
-        </contributor>
-    </contributors>
+        </developer>
+    </developers>
 
     <!-- Project dependencies -->
 
@@ -61,7 +59,7 @@
     <!-- Project settings -->
 
     <build>
-        <!-- Replaces tokens like "${project.version}" in plugin.yml and config.yml -->
+        <!-- Replaces tokens like "${project.version}" in plugin.yml -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

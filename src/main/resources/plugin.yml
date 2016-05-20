@@ -4,9 +4,3 @@ description: ${project.description}
 authors:     [Cyclometh, RoyCurtis]
 website:     https://github.com/Gamealition/Titanic
 main:        com.cyclometh.bukkit.plugins.toughboats.Titanic
-
-commands:
-   titanic:
-      description: Reloads Titanic config from disk
-      permission:  titanic.reload
-      usage:       /<command>
