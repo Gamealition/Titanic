@@ -28,15 +28,18 @@ public class BoatMoveListener implements Listener
     }
 
     @EventHandler
-    /** Fires when boat moves whilst empty (drifting boats) */
     public void onVehicleMove(VehicleMoveEvent event)
     {
         Boat   boat;
         Vector vel;
 
+        // Only track boats
         if (event.getVehicle().getType() != EntityType.BOAT)
             return;
-        else if (event.getVehicle().getPassenger() != null)
+
+        // Only track boats that are unoccupied or have non-player riders
+        if (event.getVehicle().getPassenger() != null)
+        if (event.getVehicle().getPassenger().getType() == EntityType.PLAYER)
             return;
 
         boat = (Boat) event.getVehicle();
@@ -45,8 +48,8 @@ public class BoatMoveListener implements Listener
         // Compensate for when boat runs aground and sinks into block
         if ( boat.getLocation().getBlock().getType().isOccluding() )
             boat.teleport( boat.getLocation().add(0, 0.5, 0) );
-        // Compensate for when boat is "underwater"
-        else if ( boat.getLocation().add(0,  0.5, 0).getBlock().isLiquid() )
+        // Compensate for when boat is underwater
+        else if ( boat.getLocation().add(0, 0.5, 0).getBlock().isLiquid() )
             boat.setVelocity( vel.setY(0.06) );
     }
 }

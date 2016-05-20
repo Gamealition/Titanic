@@ -1,6 +1,5 @@
 package com.cyclometh.bukkit.plugins.toughboats;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,7 +48,6 @@ public class ToughBoats extends JavaPlugin
     {
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
-        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
 
         moveListener   = null;
         packetListener = null;
