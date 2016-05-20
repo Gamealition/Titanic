@@ -22,12 +22,15 @@ Currently, Titanic is able to push boats upwards if they:
 
 Titanic has trouble with:
 
+* Smooth rides; Titanic works by setting velocity on ridden boats. This interrupts momentum on the
+  client side, making movement jerky or unpredictable.
+* When entering a water ramp, it takes a while before a ridden boat jumps up to the surface
 * Keeping players attached; if a boat has been underwater too long, the client will force a 
   dismount. This cannot be solved by cancelling `VehicleExitEvent` as there is no reliable way to
   tell when a player is intentionally dismounting.
-* Smooth rides; Titanic works by setting velocity on ridden boats. This interrupts momentum on the
-  client side, making movement jerky or unpredictable.
 * Waterfalls/elevators; sometimes boats may shoot too far up too fast, or shoot through the water
+* Sometimes, riding on a boat that runs aground from current gets stuck in a rapid up and down
+  client-side movement
     
 # Dev notes
 
