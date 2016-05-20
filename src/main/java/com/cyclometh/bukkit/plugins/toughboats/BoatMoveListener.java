@@ -15,8 +15,8 @@ import java.util.logging.Logger;
  */
 public class BoatMoveListener implements Listener
 {
-    private static ToughBoats      PLUGIN;
-    private static Logger          LOGGER;
+    private static ToughBoats PLUGIN;
+    private static Logger     LOGGER;
 
     public BoatMoveListener(ToughBoats plugin)
     {
@@ -31,35 +31,23 @@ public class BoatMoveListener implements Listener
     /** Fires when boat moves whilst empty (drifting boats) */
     public void onVehicleMove(VehicleMoveEvent event)
     {
-        Boat    boat;
-        Vector  vel;
-        double  velX, velY, velZ;
+        Boat   boat;
+        Vector vel;
 
         if (event.getVehicle().getType() != EntityType.BOAT)
+            return;
+        else if (event.getVehicle().getPassenger() != null)
             return;
 
         boat = (Boat) event.getVehicle();
         vel  = boat.getVelocity();
-        velX = vel.getX();
-        velY = vel.getY();
-        velZ = vel.getZ();
 
         // Compensate for when boat runs aground and sinks into block
-        if ( velY < -0.01 && boat.getLocation().getBlock().getType().isOccluding() )
-        {
+        if ( boat.getLocation().getBlock().getType().isOccluding() )
             boat.teleport( boat.getLocation().add(0, 0.5, 0) );
-            return;
-        }
-
-        // Proceed only if movement is large enough
-        if (velX <  0.01 && velZ <  0.01)
-        if (velX > -0.01 && velZ > -0.01)
-            return;
-
         // Compensate for when boat is "underwater"
-        if ( boat.getLocation().add(0,  0.5, 0).getBlock().isLiquid() )
+        else if ( boat.getLocation().add(0,  0.5, 0).getBlock().isLiquid() )
             boat.setVelocity( vel.setY(0.06) );
     }
-
 }
 
