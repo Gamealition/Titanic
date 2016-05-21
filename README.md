@@ -48,17 +48,69 @@ For anybody who wants to implement a similar fix, these are my experiences from 
   * Server does not track velocity but does track position changes
   * Client only responds to Entity.setVelocity
   * Client will force a dismount if underwater too long; no way to tell if it's a manual dismount
+  * Attempting to push up whilst boat is just in/on a slope makes the ride very jumpy
 
 # Building
 
-1. Install Maven on your system
-    * Windows: https://maven.apache.org/download.cgi
-    * Linux: Install the `maven` package (e.g. `sudo apt-get install maven`)
-2. Clone this repository into a folder
-3. Inside the folder, execute `mvn clean package`
-4. Look in the new `target` folder for the built JAR file
+Titanic uses Maven for dependency management and building. These instructions are simply for
+building a jar file of Titanic. This is useful for use with CI servers (e.g. Jenkins) or for
+checking if the code builds in your development environment.
+
+## Command line (Win/Linux)
+
+*Assuming Maven is [installed to or available in PATH](https://maven.apache.org/install.html)*
+
+1. [Clone this repository using your git client (e.g. 
+`git clone https://github.com/Gamealition/Titanic.git`)](http://i.imgur.com/VB7dE6d.png)
+* Go into repository directory
+* [Execute `mvn clean package`](http://i.imgur.com/UOzULcl.png)
+* [Built jar file will be located in the new `target` directory](http://i.imgur.com/bDGVDwW.png)
+
+## IntelliJ
+
+1. [Clone this repository using your git client](http://i.imgur.com/VB7dE6d.png)
+* In IntelliJ, go to `File > Open`
+* [Navigate to the repository and open the `pom.xml` file](http://i.imgur.com/zcVkyAm.png)
+* [Look for and open the "Maven Projects" tab, expand "Titanic" and then "Lifecycle"](http://i.imgur.com/TB3Ab4T.png)
+* [Double-click "Clean" and wait for the process to finish. This will ensure there are no left-over
+files from previous Maven builds that may interfere with the final build.](http://i.imgur.com/Lx5yPdc.png)
+* Double-click "Package" and wait for the process to finish
+* [Built jar file will be located in the new `target` directory](http://i.imgur.com/bDGVDwW.png)
 
 # Debugging
+
+These instructions are for running and debugging Titanic from within your development environment.
+These will help you debug Titanic and reload code changes as it runs. [Each of these steps assumes
+you have a Bukkit/Spigot/PaperSpigot server locally installed.](http://i.imgur.com/q0B28cR.png)
+
+## IntelliJ
+
+1. [Clone this repository using your git client](http://i.imgur.com/VB7dE6d.png)
+* In IntelliJ, go to `File > Open`
+* [Navigate to the repository and open the `pom.xml` file](http://i.imgur.com/zcVkyAm.png)
+* Go to `File > Project Structure... > Artifacts`
+* [Click `Add > JAR > Empty`, then configure as such:](http://i.imgur.com/kXsbr3C.png)
+    * Set Name to "Titanic"
+    * Set Output directory to the "plugins" folder of your local server
+    * Check "Build on make"
+* Right-click "'Titanic' compile output" and then click "Put into Output Root", then click OK
+* Go to `Run > Edit Configurations...`
+* [Click `Add New Configuration > JAR Application`, then configure as such:](http://i.imgur.com/smuYOFs.png)
+    * Set Name to "Server" (or "Spigot" or "PaperSpigot", etc)
+    * Set Path to JAR to the full path of your local server's executable JAR
+        * e.g. `C:\Users\TitanicDev\AppData\Local\Programs\Spigot\spigot-1.9.5.jar`
+    * Set VM options to "-Xmx2G" (allocates 2GB RAM)
+    * Set Working directory to the full path of your local server
+        * e.g. `C:\Users\TitanicDev\AppData\Local\Programs\Spigot\`
+    * Checkmark "Single instance only" on the top right corner
+* Under "Before launch", click `Add New Configuration > Build Artifacts`
+* Check "Titanic" and then click OK twice
+
+After setting up IntelliJ for debugging, all you need to do is press SHIFT+F9 to begin debugging.
+This will automatically build a jar, put it in your local server's plugins folder and then start
+your server automatically.
+
+## Debug logging
 
 Titanic makes use of `FINE` logging levels for debugging. To enable these messages, append this line
 to the server's JVM arguments:
