@@ -31,24 +31,6 @@ Titanic has trouble with:
 * Waterfalls/elevators; sometimes boats may shoot too far up too fast, or shoot through the water
 * Sometimes, riding on a boat that runs aground from current gets stuck in a rapid up and down
   client-side movement
-    
-# Dev notes
-
-For anybody who wants to implement a similar fix, these are my experiences from developing Titanic:
-
-* When a boat is not ridden by a player, the server is in full control of its velocity and position.
-  This makes it easy to prevent sinking by just applying an upward velocity. The movement ends up
-  being smooth on the client-side.
-* Initially, I thought VehicleMoveEvent did not fire if ridden by player. Spigot used to handle it
-  only via PlayerMoveEvent, [but since fixed that](https://hub.spigotmc.org/jira/browse/SPIGOT-2043).
-* VehicleMoveEvent is not cancellable, so cancelling sinking packets is not an option
-* When a boat is ridden by a player, the client is almost in full control:
-  * It seems to ignore entity teleport packets for the ridden boat
-  * Using Entity.teleport will force a dismount; re-attaching in the same event is too jerky
-  * Server does not track velocity but does track position changes
-  * Client only responds to Entity.setVelocity
-  * Client will force a dismount if underwater too long; no way to tell if it's a manual dismount
-  * Attempting to push up whilst boat is just in/on a slope makes the ride very jumpy
 
 # Building
 
