@@ -10,6 +10,12 @@ Titanic used to be ToughBoats; a plugin originally coded by [Cyclometh]
 (https://github.com/Cyclometh). Before 1.9, ToughBoats fixed a variety of boat problems. It lives
 on in the `legacy` branch.
 
+# Links
+
+* [Downloads](https://github.com/Gamealition/Titanic/releases)
+* [BukkitDev](http://dev.bukkit.org/bukkit-plugins/titanic-boatfix/)
+* [Spigot resource](https://www.spigotmc.org/resources/titanic.23680/)
+
 # Behavior
 
 Currently, Titanic is able to push boats upwards if they:
