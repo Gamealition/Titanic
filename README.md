@@ -1,4 +1,4 @@
-Titanic is a Bukkit plugin for 1.9.4 and above. Its sole function is to try to fix [MC-91206]
+Titanic is a Bukkit plugin for 1.9.4, 1.10.2 and above. Its sole function is to try to fix [MC-91206]
 (https://bugs.mojang.com/browse/MC-91206), a regression where boats are sunk by entering sloped
 water, currents and waterfalls.
 
@@ -80,7 +80,7 @@ you have a Bukkit/Spigot/PaperSpigot server locally installed.](http://i.imgur.c
 * [Click `Add New Configuration > JAR Application`, then configure as such:](http://i.imgur.com/smuYOFs.png)
     * Set Name to "Server" (or "Spigot" or "PaperSpigot", etc)
     * Set Path to JAR to the full path of your local server's executable JAR
-        * e.g. `C:\Users\TitanicDev\AppData\Local\Programs\Spigot\spigot-1.9.5.jar`
+        * e.g. `C:\Users\TitanicDev\AppData\Local\Programs\Spigot\spigot-1.10.2.jar`
     * Set VM options to "-Xmx2G" (allocates 2GB RAM)
     * Set Working directory to the full path of your local server
         * e.g. `C:\Users\TitanicDev\AppData\Local\Programs\Spigot\`
