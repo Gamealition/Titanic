@@ -15,3 +15,6 @@ build_script:
   - mvn clean package 
 test_script:
   - mvn test
+ artifacts:
+  - path: C:\projects\titanic\target\*.jar
+    name: Titanic
