@@ -8,7 +8,7 @@
 
     <groupId>com.cyclometh.bukkit.plugins.toughboats</groupId>
     <artifactId>Titanic</artifactId>
-    <version>1.10.2-1.0.0</version>
+    <version>1.11-1.0.0</version>
 
     <description>
         Prevents the sinking of boats by currents and waterfalls
@@ -39,10 +39,10 @@
     <!-- Project dependencies -->
 
     <repositories>
-        <!-- For spigot/bukkit/craftbukkit snapshots -->
+        <!-- For Spigot + Bukkit API -->
         <repository>
-            <id>spigot-snapshots</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/public/</url>
         </repository>
     </repositories>
 
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

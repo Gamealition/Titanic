@@ -1,4 +1,4 @@
-Titanic is a Bukkit plugin for 1.9.4, 1.10.2 and above. Its sole function is to try to fix [MC-91206]
+Titanic is a Bukkit plugin for 1.9.4 and above. Its sole function is to try to fix [MC-91206]
 (https://bugs.mojang.com/browse/MC-91206), a regression where boats are sunk by entering sloped
 water, currents and waterfalls.
 
