@@ -58,6 +58,11 @@
 
     <!-- Project settings -->
 
+    <!-- Enforce Unicode when compiling Java -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
         <!-- Replaces tokens like "${project.version}" in plugin.yml -->
         <resources>
@@ -67,8 +72,8 @@
             </resource>
         </resources>
 
-        <!-- Specifies minimum Java version for compile and runtime -->
         <plugins>
+            <!-- Specifies minimum Java version and Unicode for compile and runtime -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -76,6 +81,17 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Ensure resource files are processed as Unicode -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>
