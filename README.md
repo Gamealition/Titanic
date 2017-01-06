@@ -14,7 +14,6 @@ on in the `legacy` branch.
 
 * [Downloads](https://github.com/Gamealition/Titanic/releases)
 * [BukkitDev](http://dev.bukkit.org/bukkit-plugins/titanic-boatfix/)
-* [Spigot resource](https://www.spigotmc.org/resources/titanic.23680/)
 
 # Behavior
 
