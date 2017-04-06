@@ -1,14 +1,15 @@
-Titanic is a Bukkit plugin for 1.9.4 and above. Its sole function is to try to fix [MC-91206]
-(https://bugs.mojang.com/browse/MC-91206), a regression where boats are sunk by entering sloped
-water, currents and waterfalls.
+Titanic is a Bukkit plugin for 1.9.4 and above. Its sole function is to try to fix [MC-91206][1]
+, a regression where boats are sunk by entering sloped water, currents and waterfalls.
 
 This plugin is not perfect. Since 1.9, boat movement whilst riding is handled by the client. The
 plugin has to fight against the client's movements by setting velocity. It is too difficult to
 emulate pre-1.9 behavior.
 
-Titanic used to be ToughBoats; a plugin originally coded by [Cyclometh]
-(https://github.com/Cyclometh). Before 1.9, ToughBoats fixed a variety of boat problems. It lives
-on in the `legacy` branch.
+Titanic used to be ToughBoats; a plugin originally coded by [Cyclometh][2]. Before 1.9,
+ToughBoats fixed a variety of boat problems. It lives on in the `legacy` branch.
+
+[1]: https://bugs.mojang.com/browse/MC-91206
+[2]: https://github.com/Cyclometh
 
 # Links
 
